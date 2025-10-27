@@ -6,10 +6,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="stylesheet" href="style.css">
     <title>Récapitulatif des produits</title>
 </head>
 <body>
+        <nav>
+            <a href="index.php">Ajouter un protduit</a>
+            <a href="recap.php">Voir le récapitulatif</a>
+            <?php
+                if(!isset($_SESSION['products']) || empty ($_SESSION['products'])){  
+                    // s'il n'y a pas de tableau products en session OU que le tableau products est vide alors
+                    echo "Articles dans la session : 0";
+                } else {
+                    echo "Articles dans la session : " . count($_SESSION['products']);
+                }
+            ?>
+
+        <nav>
     <?php 
         if(!isset($_SESSION['products']) || empty ($_SESSION['products'])){  
             // s'il n'y a pas de tableau products en session OU que le tableau products est vide alors
@@ -27,6 +40,7 @@
                             "<th>Prix</th>",
                             "<th>Quantité</th>",
                             "<th>Total</th>",
+                            "<th>Actions</th>",
                         "</tr>",
                     "</thead>",
                     "<tbody>";
@@ -44,6 +58,10 @@
                         // puis on ajoute le symbole "€"
                         "<td>" .$product['qtt']. "</td>",
                         "<td>" .number_format($product['total'], 2, ",", "&nbsp;"). "&nbsp;€</td>",
+                        "<td><a href=" . 'traitement.php?action=delete&id=' . $index . ">Delete</a>
+                        <a href=" . 'traitement.php?action=up-qtt&id=' . $index . "&qtt=" . $product['qtt'] .">Up qtt</a>
+                        <a href=" . 'traitement.php?action=down-qtt&id=' . $index . "&qtt=" . $product['qtt'] .">Down qtt</a>
+                        </td>",
                     "</tr>";
                 $totalGeneral += $product['total'];
 
@@ -60,8 +78,10 @@
                 "</tbody>",
                 "</table>";
         }
-    
-    
+
+        // var_dump($_SESSION['products'])
     ?>
+
+    <a href="traitement.php?action=clear">Clear session</a>
 </body>
 </html>
