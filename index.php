@@ -53,7 +53,8 @@ session_start();
         <?php
     # Affiche un message de confirmation ou d'erreur stocké dans la session
     if(isset($_SESSION['message'])){
-        echo $_SESSION['message'];
+        echo '<p id="message">'.$_SESSION['message'].'</p>';
+        unset($_SESSION['message']); // on vide le message après affichage
     }  
 ?>
       </div>
