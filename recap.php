@@ -10,9 +10,15 @@
     <title>Récapitulatif des produits</title>
 </head>
 <body>
+<div id = "wrapper">
+    <header>
+    <h1> EnesAppli </h1>
+                <figure>
+                    <img src="" alt="">
+                 <figure>
         <nav>
-            <a href="index.php">Ajouter un protduit</a>
-            <a href="recap.php">Voir le récapitulatif</a>
+        <a class=ajouteRecap href="index.php">Ajouter un protduit</a>
+        <a class=ajouteRecap href="recap.php">Voir le récapitulatif</a>
             <?php
                 if(!isset($_SESSION['products']) || empty ($_SESSION['products'])){  
                     // s'il n'y a pas de tableau products en session OU que le tableau products est vide alors
@@ -23,6 +29,8 @@
             ?>
 
         <nav>
+     </header>
+     <main> 
     <?php 
         if(!isset($_SESSION['products']) || empty ($_SESSION['products'])){  
             // s'il n'y a pas de tableau products en session OU que le tableau products est vide alors
@@ -58,7 +66,9 @@
                         // puis on ajoute le symbole "€"
                         "<td>" .$product['qtt']. "</td>",
                         "<td>" .number_format($product['total'], 2, ",", "&nbsp;"). "&nbsp;€</td>",
-                        "<td><a href=" . 'traitement.php?action=delete&id=' . $index . ">Delete</a>
+                        // un lien qui permet a l'action de supprimer le contenu de l'id avec l'index
+                        // le deuxieme lien qui permet d'augementer la quantité  de l'id 
+                        "<td><a href=" . 'traitement.php?action=delete&id=' . $index . ">Delete</a> 
                         <a href=" . 'traitement.php?action=up-qtt&id=' . $index . "&qtt=" . $product['qtt'] .">Up qtt</a>
                         <a href=" . 'traitement.php?action=down-qtt&id=' . $index . "&qtt=" . $product['qtt'] .">Down qtt</a>
                         </td>",
@@ -83,5 +93,10 @@
     ?>
 
     <a href="traitement.php?action=clear">Clear session</a>
+    </main> 
+    <footer class="myfooter">
+      <h3>EnesAppli</h3>
+    </footer>
+    <div id = "wrapper">
 </body>
 </html>

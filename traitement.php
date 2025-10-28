@@ -1,14 +1,20 @@
 <?php
-    session_start();
+    session_start(); //
 
-   
+# Vérifie si une action est demandée avec un lien qui contient l'instruction action
 if(isset($_GET['action'])){
     switch($_GET['action']){
         case "add":
+            # Vérifie si le formulaire d'ajout de produit a été soumis
             if(isset($_POST['submit'])){
-                $name = filter_input(INPUT_POST,"name", FILTER_SANITIZE_STRING);  //(champ "name") filter supprime une chaîne de caractères de toute présence de caractères spéciaux et de tout baliste HTML,pas injection de code HTML possible
-                $price = filter_input(INPUT_POST,"price", FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION); //(champ "price")filter validera le prix que s'il est un nombre à virgule, et le drapeau pour utilisé le caractère "," ou "." pour la décimale
-                $qtt = filter_input(INPUT_POST,"qtt", FILTER_VALIDATE_INT);//(champ "qtt") filter validera la quantitié que si le nombre entier différent de zéro    
+                
+                # Nettoie le champ 'name' pour empêcher l'injection de code  
+                $name = filter_input(INPUT_POST,"name", FILTER_SANITIZE_STRING);  
+                # "FILTER_VALIDATE_FLOAT" n'autorise que les nombres à virgule, "FILTER_FLAG_ALLOW_FRACTION" permet l'ajout d'un "," ou "."
+                $price = filter_input(INPUT_POST,"price", FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION); 
+                # N'autorise que les nombres entiers positifs
+                $qtt = filter_input(INPUT_POST,"qtt", FILTER_VALIDATE_INT);
+                # Vérifie que tous les champs sont valides avant d'ajouter le produit   
         
                 if($name && $price && $qtt){
         
@@ -18,10 +24,9 @@ if(isset($_GET['action'])){
                         "qtt" => $qtt,
                         "total" => $price*$qtt,
                     ];
-        
+                    # Ajoute le produit au tableau de session 'products'
                     $_SESSION['products'][] = $product;
-                    // on ajoute le produit ($product) à la fin du tableau 'products' stocké dans la session
-        
+                     # Stocke un message de confirmation pour l'ajout
                     $_SESSION ['message']= "produit ajouté  avec succès";
                 } else {
                     # Stocke un message d'erreur si les champs ne sont pas valides
@@ -32,21 +37,23 @@ if(isset($_GET['action'])){
         
         case "delete":
             if(isset($_SESSION['products'])){
-                unset($_SESSION['products'][$_GET['id']]);
-                # Stocke un message de confirmation pour la suppression
+                unset($_SESSION['products'][$_GET['id']]); 
+                #Stocke un message de confirmation pour la suppression
                 $_SESSION['message'] = "Produit supprimé avec succès !";    
             }
             break;
         case "clear":
             if(isset($_SESSION['products'])){
                 unset($_SESSION['products']);
-                # Stocke un message de confirmation pour la suppression
+                #Stocke un message de confirmation pour la suppression
                 $_SESSION['message'] = "Liste supprimé avec succès !";    
             }
             break;
         case "up-qtt":
             if(isset($_SESSION['products'])){
+                # la quantité de l'id prend +1
                 $product = $_SESSION['products'][$_GET['id']]['qtt']++;
+                #total= prix * qtt
                 ($_SESSION['products'][$_GET['id']]['total']=$_SESSION['products'][$_GET['id']]['price']*$_SESSION['products'][$_GET['id']]['qtt']);
             }
             header("Location:recap.php");
@@ -54,8 +61,8 @@ if(isset($_GET['action'])){
             break;
             case "down-qtt":
                 
-                if(isset($_SESSION['products']) && ($_SESSION['products'][$_GET['id']]['qtt']) > 0) {
-                    $product = $_SESSION['products'][$_GET['id']]['qtt']--;
+                if(isset($_SESSION['products']) && ($_SESSION['products'][$_GET['id']]['qtt']) > 0) { #la quantitié sera toujours superieur à 0(non negatif)                  
+                    $product = $_SESSION['products'][$_GET['id']]['qtt']--;                    
                     ($_SESSION['products'][$_GET['id']]['total']=$_SESSION['products'][$_GET['id']]['price']*$_SESSION['products'][$_GET['id']]['qtt']);
                 }
             header("Location:recap.php");
