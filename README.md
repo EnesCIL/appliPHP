@@ -1,4 +1,5 @@
 📘 **README — Application PHP : Gestion de produits en session**
+
 🛒 **Présentation du projet**
 
 Cette application PHP permet d’ajouter des produits dans un panier temporaire grâce à des sessions PHP.
